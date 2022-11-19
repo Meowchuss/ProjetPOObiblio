@@ -13,7 +13,26 @@ class Livre():
         self.nom = self.path.name
         
         def gettoc(path): # On veut un format {"Titre" : "Nom du livre", "Chapitres": {"Chapitre i" : ["Nom du chapitre", page]}}
+            def __init__(self,chemin):
+        self.path = p(chemin)
+        self.format = self.path.suffix
+        self.nom = self.path.name
+        
+        def gettoc(path): # On veut un format {"Titre" : "Nom du livre", "Chapitres": {"Chapitre i" : ["Nom du chapitre", page]}}
             pass
+        
+        if self.format == ".pdf":
+            pdf = Pdf.reader(self.path)
+            self.auteur = pdf.metadata["Author"]
+            self.titre = pdf.metadata["Title"]
+            self.langue = 0
+            self.toc = {}
+        elif self.format == ".epub":
+            epub = Epub(self.path)
+            self.auteur = 0
+            self.titre = 0
+            self.langue = 0
+            self.toc = {}
         
         if self.format == ".pdf":
             pdf = Pdf.reader(self.path)
