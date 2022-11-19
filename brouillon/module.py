@@ -13,10 +13,7 @@ class Livre():
         self.nom = self.path.name
         
         def gettoc(path): # On veut un format {"Titre" : "Nom du livre", "Chapitres": {"Chapitre i" : ["Nom du chapitre", page]}}
-            def __init__(self,chemin):
-        self.path = p(chemin)
-        self.format = self.path.suffix
-        self.nom = self.path.name
+            pass
         
         def gettoc(path): # On veut un format {"Titre" : "Nom du livre", "Chapitres": {"Chapitre i" : ["Nom du chapitre", page]}}
             pass
