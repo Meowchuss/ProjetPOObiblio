@@ -15,33 +15,17 @@ class Livre():
         def gettoc(path): # On veut un format {"Titre" : "Nom du livre", "Chapitres": {"Chapitre i" : ["Nom du chapitre", page]}}
             pass
         
-        def gettoc(path): # On veut un format {"Titre" : "Nom du livre", "Chapitres": {"Chapitre i" : ["Nom du chapitre", page]}}
-            pass
-        
         if self.format == ".pdf":
             pdf = Pdf.reader(self.path)
-            self.auteur = pdf.metadata["Author"]
-            self.titre = pdf.metadata["Title"]
+            self.auteur = pdf.metadata.author
+            self.titre = pdf.metadata.title
             self.langue = 0
             self.toc = {}
         elif self.format == ".epub":
             epub = Epub(self.path)
-            self.auteur = 0
-            self.titre = 0
-            self.langue = 0
-            self.toc = {}
-        
-        if self.format == ".pdf":
-            pdf = Pdf.reader(self.path)
-            self.auteur = pdf.metadata["Author"]
-            self.titre = pdf.metadata["Title"]
-            self.langue = 0
-            self.toc = {}
-        elif self.format == ".epub":
-            epub = Epub(self.path)
-            self.auteur = 0
-            self.titre = 0
-            self.langue = 0
+            self.auteur = epub.toc.authors
+            self.titre = epub.toc.title
+            self.langue = epub.toc.lang
             self.toc = {}
         
 class Bibliothèque():
