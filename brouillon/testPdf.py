@@ -22,9 +22,6 @@ k=0
 for l in bdd.iterdir():
     if l.suffix == ".pdf":
         print(f"{k=}")
-        pdf.append(Pr(l))
+        meta = Pr(l).metadata.title
+        print(meta)
         k+=1
-for reader in pdf:
-    meta = reader.metadata.title
-    print("???")
-    print(meta)
