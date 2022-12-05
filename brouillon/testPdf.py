@@ -2,12 +2,53 @@
 
 from pathlib import Path as p
 from PyPDF2 import PdfReader as Pr
-from epub import open_epub as Epub
-
+import epub
+from fitz import Document as Doc
+import fitz
 cheminLivre = p("/home/meowchuss/gitperso/ProjetPOObiblio/brouillon/livres")
-c = p("/.math_etu/users/2023/ds1/122000976/DepotsGithub/ProjetPOObiblio/brouillon/livres")
 bdd = p("/home/meowchuss/bdd livres/livres")
-pdf = []
+truc = p("/home/meowchuss/bidule")
+def getToc(filepath: str):
+    chapitres = {}
+    with Doc(filepath) as doc:
+        toc = doc.get_toc()  # [[lvl, title, page, …], …]
+        for level, title, page in toc:
+            chapitres[page] = title
+    return chapitres
+import fitz
+
+def convertir_pdf_en_epub(fichier_pdf, fichier_epub):
+    # Ouvrir le fichier PDF avec la bibliothèque fitz
+    document = fitz.open(fichier_pdf)
+
+    # Créer un nouveau livre ePub
+    livre = epub.EpubBook()
+
+    # Ajouter le titre et l'auteur au livre
+    livre.set_title("Mon livre")
+    livre.set_author("Moi")
+
+    # Parcourir les pages du document PDF
+    for i in range(document.page_count):
+        # Récupérer le texte de la page courante
+        page = document[i]
+        texte = page.get_text("text")
+
+        # Créer un chapitre ePub pour la page courante
+        chapitre = epub.EpubHtml(title="Chapitre {}".format(i+1), file_name="chapitre{}.xhtml".format(i+1), lang="fr")
+        chapitre.content = texte
+
+        # Ajouter le chapitre au livre
+        livre.add_item(chapitre)
+
+    # Définir les chapitres comme les chapitres principaux du livre
+    livre.spine = ["nav"] + livre.items
+    
+    # Écrire le livre dans un fichier ePub
+    epub.write_epub(fichier_epub, livre)
+
+# Convertir un fichier PDF en ePub
+
 """ pdf.metadata :
         Retrieve the PDF file's document information dictionary, if it exists.
         Note that some PDF files use metadata streams instead of docinfo
@@ -19,28 +60,6 @@ pdf = []
 """def get_page_number(self, page: PageObject) -> int:
         Retrieve page number of a given PageObject
 """
-k=0
-def toc(lNavPoint):
-        return [ x.labels[0][0] for x in lNavPoint]
-for l in bdd.iterdir():
-        
-        
-        if l.suffix == ".pdf":
-                titre = Pr(l).metadata.title
-                auteur = Pr(l).metadata.author
-                langue = 0
-                if not titre :
-                        print(l.name)
-                        print(f"{titre = } \n{auteur = } \n{langue =}")
-                        print()
-        elif l.suffix == ".epub":
-                """auteur = Epub(l).opf.metadata.creators[0][0]
-                
-                titre = Epub(l).opf.metadata.titles[0][0]
-                langue = Epub(l).opf.metadata.languages[0]
-                spine = Epub(l).toc.nav_map.nav_point
-                pages = Epub(l).toc.page_list.class_name
-                #print(f"{titre = } \n{auteur =} \n{langue =}")
-                #print(toc(spine))
-                #print(pages)
-                #print()"""
+from module import *
+
+R = Rapport(cheminLivre,truc)
